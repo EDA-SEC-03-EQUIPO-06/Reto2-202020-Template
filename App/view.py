@@ -50,68 +50,46 @@ Details = "themovies/SmallMoviesDetailsCleaned.csv"
 #  el controlador.
 # ___________________________________________________
 
-def printMenu()
-
+def printMenu():
+    print("0- Inicializar Catálogo")
+    print("1- Cargar Archivos")
+    print("2- Descubrir productoras de cine")
+    print("3- Conocer a un director")
+    print("4- Conocer a un actor")
+    print("5- Entender un género cinematográfico")
+    print("6- Encontrar películas por país")
+    print("7- Salir")
 
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
 while True:
     printMenu()
-    inputs = input("Selecciones una opción para continuar\n")
-
-    if int(inputs[0]) == 1:
-        
+    inputs = input("Seleccione una opción para continuar:\n")
+    if int(inputs[0]) == 0:
+        print("Inicializando Catálogo ....")
+        # cont es el controlador que se usará de acá en adelante
+        cont = controller.initCatalog()  
+    elif int(inputs[0]) == 1:
+        print("Cargando información de los archivos ....")
+        controller.loadData(cont, Casting, Details)
+        print('Películas cargadas: ' + str(controller.moviesSize(cont)))
+        print('Directores cargados: ' + str(controller.directorsSize(cont)))    
     elif int(inputs[0]) == 2:
-    
+        production_company= input("¿Qué productora de cine desea descubrir?:\n")
+        movies=controller.getMoviesByProductionCompany(cont,production_company)
+        number= controller.listSize(movies)
+    else:
+        sys.exit(0)
+"""
     elif int(inputs[0]) == 3:
-    
-    elif int(inputs[0]) == 4:
 
-    elif int(inputs[0]) == 5:
+    elif int(inputs[0]) == 4:
 
     elif int(inputs[0]) == 6:
 
     elif int(inputs[0]) == 7:
-
-    else:
-        sys.exit(0)
+"""
+    
 sys.exit()
 
-
-
-
-
-while True:
-    printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
-
-    if int(inputs[0]) == 1:
-        print("Inicializando Catálogo ....")
-        # cont es el controlador que se usará de acá en adelante
-        cont = controller.initCatalog()
-
-    elif int(inputs[0]) == 2:
-        print("Cargando información de los archivos ....")
-        controller.loadData(cont, booksfile, tagsfile, booktagsfile)
-        print('Libros cargados: ' + str(controller.booksSize(cont)))
-        print('Autores cargados: ' + str(controller.authorsSize(cont)))
-        print('Géneros cargados: ' + str(controller.tagsSize(cont)))
-
-    elif int(inputs[0]) == 3:
-        number = input("Buscando libros del año?: ")
-        books = controller.getBooksYear(cont, int(number))
-        printBooksbyYear(books)
-
-    elif int(inputs[0]) == 4:
-        authorname = input("Nombre del autor a buscar: ")
-        authorinfo = controller.getBooksByAuthor(cont, authorname)
-        printAuthorData(authorinfo)
-
-    elif int(inputs[0]) == 5:
-        label = input("Etiqueta a buscar: ")
-        books = controller.getBooksByTag(cont, label)
-        printBooksbyTag(books)
-    else:
-        sys.exit(0)
-sys.exit(0)

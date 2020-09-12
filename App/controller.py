@@ -41,21 +41,49 @@ def initCatalog():
     catalog = model.newCatalog()
     return catalog
 
-
-
 # ___________________________________________________
 #  Funciones para la carga de datos y almacenamiento
 #  de datos en los modelos
 # ___________________________________________________
 
+def loadData(catalog,castingfile,detailsfile):
+  loadDetails(catalog,detailsfile)
+  loadCasting(catalog,castingfile)
 
-def loadDetails(catalog, detailsfile, castingfile):
-    """
+def loadCasting(catalog, castingfile):
+  """
     Carga cada una de las lineas del archivo de libros.
     - Se agrega cada libro al catalogo de libros
     - Por cada libro se encuentran sus autores y por cada
       autor, se crea una lista con sus libros
-    """
+  """
+  castingfile = cf.data_dir + castingfile
+  input_file = csv.DictReader(open(castingfile))
+  for movie in input_file:
+      model.addmovie(catalog, movie)
+      directors = movie['director_name'].split(",")  # Se obtienen los autores
+      for director in directors:
+          model.addMovieDirector(catalog, director.strip(), movie)
+
+def loadDetails(catalog,detailsfile):
+  """
+    Carga en el catalogo los tags a partir de la informacion
+    del archivo de etiquetas
+  """
+  detailsfile = cf.data_dir + detailsfile
+  input_file = csv.DictReader(open(detailsfile))
+  for details in input_file:
+      model.adddetails(catalog, details)
+
+
+"""
+def loadDetails(catalog, detailsfile, castingfile):
+   
+    Carga cada una de las lineas del archivo de libros.
+    - Se agrega cada libro al catalogo de libros
+    - Por cada libro se encuentran sus autores y por cada
+      autor, se crea una lista con sus libros
+    
     detailsfile = cf.data_dir + detailsfile
     input_file = csv.DictReader(open(detailsfile))
     castingfile = cf.data_dir + castingfile
@@ -63,3 +91,68 @@ def loadDetails(catalog, detailsfile, castingfile):
 
     for i in range(len(input_file)):
         model.addMovie(catalog, input_file[i], input_file2[i])
+"""
+
+# ___________________________________________________
+#  Funciones para consultas
+# ___________________________________________________
+
+
+def moviesSize(catalog):
+  """Numero de libros leido
+  """
+  return model.moviesSize(catalog)
+
+
+def directorsSize(catalog):
+  """Numero de autores leido
+  """
+  return model.directorsSize(catalog)
+
+
+def actorsSize(catalog):
+  """Numero de tags leido
+  """
+  return model.actorsSize(catalog)
+
+def listSize(movieslist):
+  return model.listsize(movieslist)
+
+  
+def getMoviesByProductionCompany(catalog,ProductionCompany):
+  """
+  Retorna las películas de un una productora de Cine
+  """
+  productioncompanyinfo = model.getMoviesByProductionCompany(catalog, ProductionCompany)
+  return productioncompanyinfo
+
+
+def getMoviesByDirector(catalog, directorname):
+  """
+    Retorna las películas de un director
+  """
+  directorinfo = model.getMoviesByDirector(catalog, directorname)
+  return directorinfo
+
+
+def getMoviesByActor(catalog, actorname):
+  """
+  Retorna las películas de un actor
+  """
+  actorinfo = model.getMoviesByActor(catalog, actorname)
+  return actorinfo
+
+
+def getMoviesByGenre(catalog, genre):
+  """
+  Retorna las películas de un género
+  """
+  movies = model.getMoviesByGenre(catalog, genre)
+  return movies
+
+def getMoviesByCountry(catalog, country):
+  """
+  Retorna las películas de un país
+  """
+  movies = model.getMoviesByCountry(catalog, country)
+  return movies
