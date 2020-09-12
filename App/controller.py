@@ -47,7 +47,9 @@ def initCatalog():
 # ___________________________________________________
 
 def loadData(catalog,castingfile,detailsfile):
+  """
   loadDetails(catalog,detailsfile)
+  """
   loadCasting(catalog,castingfile)
 
 def loadCasting(catalog, castingfile):
@@ -64,19 +66,16 @@ def loadCasting(catalog, castingfile):
       directors = movie['director_name'].split(",")  # Se obtienen los autores
       for director in directors:
           model.addMovieDirector(catalog, director.strip(), movie)
-
+"""
 def loadDetails(catalog,detailsfile):
-  """
     Carga en el catalogo los tags a partir de la informacion
     del archivo de etiquetas
-  """
+  
   detailsfile = cf.data_dir + detailsfile
   input_file = csv.DictReader(open(detailsfile))
   for details in input_file:
       model.adddetails(catalog, details)
 
-
-"""
 def loadDetails(catalog, detailsfile, castingfile):
    
     Carga cada una de las lineas del archivo de libros.

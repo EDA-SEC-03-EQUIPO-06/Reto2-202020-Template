@@ -36,8 +36,8 @@ operación seleccionada.
 
 # ___________________________________________________
 #  Ruta a los archivos
-Casting = "themovies/MoviesCastingRaw-small.csv"
-Details = "themovies/SmallMoviesDetailsCleaned.csv"
+Casting = "MoviesCastingRaw-small.csv"
+Details = "SmallMoviesDetailsCleaned.csv"
 # ___________________________________________________
 
 
@@ -49,6 +49,21 @@ Details = "themovies/SmallMoviesDetailsCleaned.csv"
 #  respuesta.  La vista solo interactua con
 #  el controlador.
 # ___________________________________________________
+def printProductionCompanyData(ProductionCompany):
+    """
+    Imprime los libros de un autor determinado
+    """
+    if ProductionCompany:
+        print('Productora encontrada: ' + ProductionCompany['name'])
+        print('Promedio: ' + str(ProductionCompany['average_rating']))
+        print('Total de películas: ' + str(lt.size(ProductionCompany['movies'])))
+        iterator = it.newIterator(author['movies'])
+        while it.hasNext(iterator):
+            movie = it.next(iterator)
+            print('Titulo: ' + movie['title'])
+    else:
+        print('No se encontró la productora')
+
 
 def printMenu():
     print("0- Inicializar Catálogo")
@@ -77,8 +92,8 @@ while True:
         print('Directores cargados: ' + str(controller.directorsSize(cont)))    
     elif int(inputs[0]) == 2:
         production_company= input("¿Qué productora de cine desea descubrir?:\n")
-        movies=controller.getMoviesByProductionCompany(cont,production_company)
-        number= controller.listSize(movies)
+        productioncompanyinfo=controller.getMoviesByProductionCompany(cont,production_company)
+        printProductionCompanyData(productioncompanyinfo)
     else:
         sys.exit(0)
 """

@@ -88,11 +88,11 @@ def newCatalog():
     """
     return catalog
 
-def newCompany(company):
-    entry = {"company": "", "movies": None}
-    entry["company"] = company
-    entry["movies"] = lt.newList("SINGLE_LINKED", compareCompanies)
-    return entry
+def newCompany(name):
+    company = {"name": "", "movies": None, "average_rating": 0}
+    company["name"] = name
+    company["movies"] = lt.newList("SINGLE_LINKED", compareCompanies)
+    return company
 
 def newDirector(name):
     """
@@ -105,8 +105,8 @@ def newDirector(name):
     return director   
 
 def newActor(actor):
-    actor = {"actor": "", "movies": None}
-    actor["actor"] = actor
+    actor = {"name": "", "movies": None, "average_rating": 0}
+    actor["name"] = actor
     actor["movies"] = lt.newList("SINGLE_LINKED", compareActorsByName)
     return actor
 
@@ -138,7 +138,6 @@ def addMovie(catalog, movie, casting):
     addMovieActorByDirector(catalog, casting)
 
 def addMovieCompany(catalog, movie):
-    
     mapa = catalog["production_companies"]
     company = movie["production_companies"]
     existcompany = mp.contains(mapa, company)
@@ -149,6 +148,13 @@ def addMovieCompany(catalog, movie):
         comp = newCompany(company)
         mp.put(mapa, company, comp)
     lt.addLast(comp["movies"], movie)
+
+    compavg = company['average_rating']
+    movieavg = movie['average_rating']
+    if (comphavg == 0.0):
+        company['average_rating'] = float(movieavg)
+    else:
+        company['average_rating'] = (compavg + float(movieavg)) / 2
 
 def addMovieDirector(catalog, details, casting):
     mapa = catalog["directors"]
