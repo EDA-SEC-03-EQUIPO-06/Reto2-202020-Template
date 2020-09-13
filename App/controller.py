@@ -53,6 +53,7 @@ def loadData(catalog, detailsfile, castingfile):
     - Por cada libro se encuentran sus autores y por cada
       autor, se crea una lista con sus libros
     """
+    t1_start = process_time() #tiempo inicial
     dialect = csv.excel()
     dialect.delimiter = ";"
     detailsfile = cf.data_dir + detailsfile
@@ -65,6 +66,8 @@ def loadData(catalog, detailsfile, castingfile):
       model.addMovie(catalog,movie)
     for casting in input_file2:
       model.addCasting(catalog,casting)
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
 
 
 # ___________________________________________________
