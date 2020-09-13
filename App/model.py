@@ -57,28 +57,28 @@ def newCatalog():
 
     catalog['Movies'] = lt.newList('SINGLE_LINKED', compareMoviesIds)
     catalog["MoviesId"] = mp.newMap(2000,
-                                    maptype='PROBING', # No entiendo
+                                    maptype='CHAINING', # No entiendo
                                     loadfactor=0.4,  # No entiendo
                                     comparefunction=compareMapMoviesIds) #No entiendo
     catalog['production_companies'] = mp.newMap(2000,
-                                                maptype='PROBING',  # Esto no lo entiendo
+                                                maptype='CHAINING',  # Esto no lo entiendo
                                                 loadfactor=0.4,    #Esto no lo entiendo
                                                 comparefunction=compareMapCompanies) #Esto lo entiendo mas pero tampoco lo entiendo
     catalog['directors'] = mp.newMap(2000,
-                                         maptype='PROBING', #No lo entiendo
+                                         maptype='CHAINING', #No lo entiendo
                                          loadfactor=0.4, #No entiendo
                                          comparefunction=compareMapDirectorsByName) #No entiendo
     catalog['actors'] = mp.newMap(2000,
                                       maptype='CHAINING', #No entiendo
-                                      loadfactor=0.7, #No entiendo
+                                      loadfactor=0.4, #No entiendo
                                       comparefunction=compareMapActorsByName) # No entiendo
     catalog['genres'] = mp.newMap(2000,
                                  maptype='CHAINING',
-                                 loadfactor=0.7,
+                                 loadfactor=0.4,
                                  comparefunction=compareMapByGenre)
     catalog['production_countries'] = mp.newMap(2000,
                                                 maptype='CHAINING',
-                                                loadfactor=0.7,
+                                                loadfactor=100,
                                                 comparefunction=compareMapCountries)
     """                                           
     catalog['actor_director'] = mp.newMap(2000,
