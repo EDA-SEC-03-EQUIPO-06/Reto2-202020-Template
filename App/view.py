@@ -55,12 +55,12 @@ def printProductionCompanyData(ProductionCompany):
     """
     if ProductionCompany:
         print('Productora encontrada: ' + ProductionCompany['name'])
-        print('Promedio: ' + str(ProductionCompany['average_rating']))
+        print('Promedio: ' + str(round(ProductionCompany['average_rating'],2)))
         print('Total de películas: ' + str(lt.size(ProductionCompany['movies'])))
-        iterator = it.newIterator(author['movies'])
+        iterator = it.newIterator(ProductionCompany['movies'])
         while it.hasNext(iterator):
             movie = it.next(iterator)
-            print('Titulo: ' + movie['title'])
+            print('Título: ' + movie['title'])
     else:
         print('No se encontró la productora')
 
@@ -87,13 +87,14 @@ while True:
         cont = controller.initCatalog()  
     elif int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
-        controller.loadData(cont, Casting, Details)
+        controller.loadData(cont, Details, Casting)
         print('Películas cargadas: ' + str(controller.moviesSize(cont)))
         print('Directores cargados: ' + str(controller.directorsSize(cont)))    
     elif int(inputs[0]) == 2:
         production_company= input("¿Qué productora de cine desea descubrir?:\n")
         productioncompanyinfo=controller.getMoviesByProductionCompany(cont,production_company)
         printProductionCompanyData(productioncompanyinfo)
+        
     else:
         sys.exit(0)
 """

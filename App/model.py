@@ -63,23 +63,23 @@ def newCatalog():
     catalog['production_companies'] = mp.newMap(2000,
                                                 maptype='PROBING',  # Esto no lo entiendo
                                                 loadfactor=0.4,    #Esto no lo entiendo
-                                                comparefunction=compareCompanies) #Esto lo entiendo mas pero tampoco lo entiendo
+                                                comparefunction=compareMapCompanies) #Esto lo entiendo mas pero tampoco lo entiendo
     catalog['directors'] = mp.newMap(2000,
                                          maptype='PROBING', #No lo entiendo
                                          loadfactor=0.4, #No entiendo
-                                         comparefunction=compareDirectorsByName) #No entiendo
+                                         comparefunction=compareMapDirectorsByName) #No entiendo
     catalog['actors'] = mp.newMap(2000,
                                       maptype='CHAINING', #No entiendo
                                       loadfactor=0.7, #No entiendo
-                                      comparefunction=compareActorsByName) # No entiendo
+                                      comparefunction=compareMapActorsByName) # No entiendo
     catalog['genres'] = mp.newMap(2000,
                                  maptype='CHAINING',
                                  loadfactor=0.7,
-                                 comparefunction=compareByGenre)
+                                 comparefunction=compareMapByGenre)
     catalog['production_countries'] = mp.newMap(2000,
                                                 maptype='CHAINING',
                                                 loadfactor=0.7,
-                                                comparefunction=compareCountries)
+                                                comparefunction=compareMapCountries)
     """                                           
     catalog['actor_director'] = mp.newMap(2000,
                                           maptype='CHAINING',
@@ -91,7 +91,8 @@ def newCatalog():
 def newCompany(name):
     company = {"name": "", "movies": None, "average_rating": 0}
     company["name"] = name
-    company["movies"] = lt.newList("SINGLE_LINKED", compareCompanies)
+    company["movies"] = lt.newList("SINGLE_LINKED", compareElements)
+    company["average_rating"]=0
     return company
 
 def newDirector(name):
@@ -101,13 +102,13 @@ def newDirector(name):
     """
     director = {'name': "", "movies": None,  "average_rating": 0}
     director['name'] = name
-    director['movies'] = lt.newList('SINGLE_LINKED', compareDirectorsByName)
+    director['movies'] = lt.newList('SINGLE_LINKED', compareElements)
     return director   
 
 def newActor(actor):
     actor = {"name": "", "movies": None, "average_rating": 0}
     actor["name"] = actor
-    actor["movies"] = lt.newList("SINGLE_LINKED", compareActorsByName)
+    actor["movies"] = lt.newList("SINGLE_LINKED", compareElements)
     return actor
 
 def newGenre(genre):
@@ -117,25 +118,25 @@ def newGenre(genre):
     """
     entry = {'genre': "", "movies": None}
     entry['genre'] = genre
-    entry["movies"] = lt.newList('SINGLE_LINKED', compareByGenre)
+    entry["movies"] = lt.newList('SINGLE_LINKED', compareElements)
     return entry
 
 def newCountry(country):
     entry = {"country": "", "movies": None}
     entry["country"] = country
-    entry["movies"] = lt.newList("SINGLE_LINKED", compareCountries)
+    entry["movies"] = lt.newList("SINGLE_LINKED", compareElements)
     return entry
 
 # Funciones para agregar informacion al catalogo
-
-def addMovie(catalog, movie, casting):
+def addMovie(catalog, movie):
     lt.addLast(catalog["Movies"], movie)
     mp.put(catalog["MoviesId"], movie["id"], movie)
     addMovieGenre(catalog,movie)
     addMovieCompany(catalog, movie)
-    addMovieDirector(catalog, movie, casting)
-    addMovieActor(catalog, movie, casting)
-    addMovieActorByDirector(catalog, casting)
+    
+def addCasting(catalog, casting):
+    addMovieDirector(catalog, casting)
+    addMovieActor(catalog, casting)
 
 def addMovieCompany(catalog, movie):
     mapa = catalog["production_companies"]
@@ -148,17 +149,20 @@ def addMovieCompany(catalog, movie):
         comp = newCompany(company)
         mp.put(mapa, company, comp)
     lt.addLast(comp["movies"], movie)
-
-    compavg = company['average_rating']
-    movieavg = movie['average_rating']
-    if (comphavg == 0.0):
-        company['average_rating'] = float(movieavg)
+    compavg = comp['average_rating']
+    movieavg = movie['vote_average']
+    if (compavg == 0.0):
+        comp['average_rating'] = float(movieavg)
     else:
-        company['average_rating'] = (compavg + float(movieavg)) / 2
+        comp['average_rating'] = (compavg + float(movieavg)) / 2
 
-def addMovieDirector(catalog, details, casting):
+def addMovieDirector(catalog,casting):
     mapa = catalog["directors"]
+    compareMap = catalog["MoviesId"]
     director = casting["director_name"]
+    ide = casting["id"]
+    pair = mp.get(compareMap, ide)
+    details = me.getValue(pair)
     existdirector = mp.contains(mapa, director)
     if existdirector:
         entry = mp.get(mapa, director)
@@ -168,7 +172,7 @@ def addMovieDirector(catalog, details, casting):
         mp.put(mapa, director, comp)
     lt.addLast(comp["movies"], details)
 
-def addMovieActor(catalog, details, casting):
+def addMovieActor(catalog,casting):
     mapa = catalog["actors"]
     actors = [casting["actor1_name"],casting["actor2_name"],casting["actor3_name"],casting["actor4_name"],casting["actor5_name"]]
     for actor in actors:
@@ -179,7 +183,7 @@ def addMovieActor(catalog, details, casting):
         else:
             comp = newActor(actor)
             mp.put(mapa,actor, comp)
-        lt.addLast(comp["movies"], details)
+        lt.addLast(comp["movies"], casting)
 
 def addMovieGenre(catalog, movie):
     """
@@ -213,19 +217,6 @@ def addMovieCountry(catalog, movie):
         mp.put(mapa, country, comp)
     lt.addLast(comp["movies"], movie)
 
-
-def addMovieActorByDirector(catalog,casting):
-    mapa = catalog["actor_director"]
-    actors = [casting["actor1_name"],casting["actor2_name"],casting["actor3_name"],casting["actor4_name"],casting["actor5_name"]]
-    for actor in actors:
-        existActor = mp.contains(mapa, actor)
-        if existActor:
-            entry = mp.get(mapa,actor)
-            comp = me.getValue(entry)
-        else:
-            comp = newActor(actor)
-            mp.put(mapa,actor, comp)
-        lt.addLast(comp["movies"], casting)
     
 # ==============================
 # Funciones de consulta
@@ -234,7 +225,7 @@ def addMovieActorByDirector(catalog,casting):
 def moviesSize(catalog):
     """Numero de películas
     """
-    return lt.size(catalog["movies"])
+    return lt.size(catalog["Movies"])
 
 
 def directorsSize(catalog):
@@ -247,9 +238,6 @@ def actorsSize(catalog):
     """Numero de actores leido
     """
     return lt.size(catalog["actors"])
-
-def listsize(movies):
-    return lt.size(movies)
 
   
 def getMoviesByProductionCompany(catalog,ProductionCompanyName):
@@ -325,7 +313,7 @@ def compareMapMoviesIds(id, entry):
         return 1
     else:
         return -1
-def compareCompanies(keyname,company):
+def compareMapCompanies(keyname,company):
     companyentry=me.getKey(company)
     if keyname==companyentry:
         return 0
@@ -333,7 +321,14 @@ def compareCompanies(keyname,company):
         return 1
     else:
         return -1
-def compareDirectorsByName(keyname,director):
+def compareElements(element1, element2):
+    if (element1 == element2):
+        return 0
+    elif (element1 > element2):
+        return 1
+    else:
+        return 0
+def compareMapDirectorsByName(keyname,director):
     directorentry=me.getKey(director)
     if keyname==directorentry:
         return 0
@@ -342,7 +337,7 @@ def compareDirectorsByName(keyname,director):
     else:
         return -1
 
-def compareActorsByName(keyname,actor):
+def compareMapActorsByName(keyname,actor):
     actorentry=me.getKey(actor)
     if keyname==actorentry:
         return 0
@@ -352,7 +347,8 @@ def compareActorsByName(keyname,actor):
         return -1
     return 0     
 
-def compareByGenre(keyname,genre):
+
+def compareMapByGenre(keyname,genre):
     genreentry=me.getKey(genre)
     if keyname==genreentry:
         return 0
@@ -360,12 +356,21 @@ def compareByGenre(keyname,genre):
         return 1
     else:
         return -1
+
     
-def compareCountries(keyname,country):
+def compareMapCountries(keyname,country):
     countryentry=me.getKey(country)
     if keyname==countryentry:
         return 0
     elif keyname > countryentry:
+        return 1
+    else:
+        return -1
+def compareMapActorsDirectors(id,tag):
+    entry = me.getKey(tag)
+    if (id == entry):
+        return 0
+    elif (id > entry):
         return 1
     else:
         return -1
