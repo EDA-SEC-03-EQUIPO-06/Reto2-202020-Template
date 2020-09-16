@@ -46,65 +46,49 @@ Details = "themoviesdb/SmallMoviesDetailsCleaned.csv"
 #  respuesta.  La vista solo interactua con
 #  el controlador.
 # ___________________________________________________
-def printinfo(lst):
-    print("Se cargaron "+ str(controller.detailsSize(lista_details))+" películas")
-    print("\nInformación Primera Película\n ")
-    primer_elemento =controller.getFirstElement(lst)
-    print("Título: " + controller.getTitle(primer_elemento))
-    print("Fecha de estreno: " + controller.getDate(primer_elemento))
-    print("Promedio de votación: " + controller.getAverage(primer_elemento))
-    print("Numero de votos: " + controller.getVotes(primer_elemento))
-    print("Idioma de la película: " + controller.getLang(primer_elemento))
-    print("\nInformación Última Película\n")
-    ultimo_elemento = controller.getLastElement(lst)
-    print("Título: " + controller.getTitle(ultimo_elemento))
-    print("Fecha de estreno: " + controller.getDate(ultimo_elemento))
-    print("Promedio de votación: " + controller.getAverage(ultimo_elemento))
-    print("Número de votos: " + controller.getVotes(ultimo_elemento))
-    print("Idioma de la película: " + controller.getLang(ultimo_elemento))
-    print("\n")
-
 
 def printMenu():
-    print("Opción 1: Cargar Archivos")
-    print("Opción 2: Requerimiento 1")
-    print("Opción 3: Requerimiento 2")
-    print("Opción 4: Requerimiento 3")
-    print("Opción 5: Requerimiento 4")
-    print("Opción 6: Requerimiento 5")
-    print("Opción 7: Salir")
-    
-
+    print("1- Inicializar Catálogo")
+    print("2- Cargar Archivos")
+    print("3- Descubrir productoras de cine")
+    print("4- Conocer a un director")
+    print("5- Conocer a un actor")
+    print("6- Entender un género cinematográfico")
+    print("7- Encontrar películas por país")
+    print("8- Salir")
 
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
+
 while True:
-    
-    lista_details = controller.newListDetails()
     printMenu()
-    inputs = input("Selecciones una opción para continuar\n")
+    inputs = input('Seleccione una opción para continuar\n')
 
     if int(inputs[0]) == 1:
-        print("Cargando Archivos...")
-        controller.loadDetails(lista_details, Details)
-        printinfo(lista_details)
-        
+        print("Inicializando Catálogo ....")
+        # cont es el controlador que se usará de acá en adelante
+        cont = controller.initCatalog()
+
     elif int(inputs[0]) == 2:
-        print(0)
+        print("Cargando información de los archivos ....")
+        controller.loadData(cont, Details, Casting)
+        print("Peliculas cargadas: " + str(controller.movieSize(cont)))
+
     elif int(inputs[0]) == 3:
-        print(0)
+        company = input("Ingrese el nombre de la compañia que desea consultar")
+        info = controller.moviesByCompany(cont,company)
+        print("La compañia " + company + " tiene un total de "+ str(info[1]) + " peliculas, con un promedio de " + str(round(info[2],2)) + " algunas de sus peliculas son estas: \n" + str(info[0]))
+
     elif int(inputs[0]) == 4:
-        print(0)
+        authorname = input("Nombre del autor a buscar: ")
+        authorinfo = controller.getBooksByAuthor(cont, authorname)
+        printAuthorData(authorinfo)
+
     elif int(inputs[0]) == 5:
-        print(0)
-    elif int(inputs[0]) == 6:
-        print(0)
+        label = input("Etiqueta a buscar: ")
+        books = controller.getBooksByTag(cont, label)
+        printBooksbyTag(books)
     else:
         sys.exit(0)
-sys.exit()
-
-
-
-
-
+sys.exit(0)

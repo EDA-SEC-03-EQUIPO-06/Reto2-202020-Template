@@ -36,6 +36,9 @@ recae sobre el controlador.
 #  Inicializacion del catalogo
 # ___________________________________________________
 
+def initCatalog():
+    catalog = model.newCatalog()
+    return catalog
 
 
 
@@ -44,46 +47,41 @@ recae sobre el controlador.
 #  de datos en los modelos
 # ___________________________________________________
 
-def newListDetails():
-    a = model.newList()
-    return a
 
-def loadDetails(lst, detailsfile):
-    detailsfile = cf.data_dir + detailsfile
+def loadData(catalog, detailsfile, castingfile):
+    """
+    Carga cada una de las lineas del archivo de libros.
+    - Se agrega cada libro al catalogo de libros
+    - Por cada libro se encuentran sus autores y por cada
+      autor, se crea una lista con sus libros
+    """
     dialect = csv.excel()
     dialect.delimiter = ";"
+    detailsfile = cf.data_dir + detailsfile
+    #input_file = #csv.DictReader(open(detailsfile,encoding="utf-8"), dialect=dialect)
     input_file = csv.DictReader(open(detailsfile,encoding="utf-8"),dialect= dialect)
-    for movie in input_file:
-        model.addLast(lst,movie)
+    castingfile = cf.data_dir + castingfile
+    input_file2 = csv.DictReader(open(castingfile,encoding="utf-8"),dialect= dialect)
 
-def detailsSize(lst):
-    size = model.giveSize(lst)
+    for movie in input_file:
+      model.addMovie(catalog,movie)
+    for casting in input_file2:
+      model.addCasting(catalog,casting)
+
+
+
+# ___________________________________________________
+#  Funciones para consultas
+# ___________________________________________________
+
+def movieSize(catalog):
+    size = model.moviesSize(catalog)
     return size
 
-def getFirstElement(lst):
-    first_element=model.getFirstElement(lst)
-    return first_element
-
-def getLastElement(lst):
-    last_element=model.getLastElement(lst)
-    return last_element
-
-def getTitle(element):
-    title=model.getTitle(element)
-    return title
-
-def getDate(element):
-    date=model.getDate(element)
-    return date
-
-def getAverage(element):
-    average=model.getAverage(element)
-    return average
-
-def getVotes(element):
-    votes=model.getVotes(element)
-    return votes
-
-def getLang(element):
-    lang=model.getLang(element)
-    return lang
+def moviesByCompany(catalog, company):
+    info = model.getMoviesByCompany(catalog,company)
+    movies = info[0]
+    count = model.listSize(movies)
+    moviesReduced = model.getFifteenElements(movies)
+    prom = info[1]/count
+    return (moviesReduced, count, prom)
