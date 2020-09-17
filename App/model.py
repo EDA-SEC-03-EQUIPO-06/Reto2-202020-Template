@@ -23,6 +23,7 @@ import config
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+from DISClib.DataStructures import listiterator as it
 assert config
 
 """
@@ -106,9 +107,10 @@ def newDirector(name):
     return director   
 
 def newActor(actor):
-    actor = {"name": "", "movies": None, "average_rating": 0}
+    actor = {"name": "", "movies": None, "average_rating": 0,"directors":"", "DirectorMaxCol":""}
     actor["name"] = actor
     actor["movies"] = lt.newList("SINGLE_LINKED", compareElements)
+    actor["directors"]= lt.newList("ARRAY_LIST", compareElements)
     return actor
 
 def newGenre(genre):
@@ -135,7 +137,7 @@ def addMovie(catalog, movie):
     addMovieCompany(catalog, movie)
     
 def addCasting(catalog, casting):
-    addMovieDirector(catalog, casting)
+    addMovieDirector(catalog,casting)
     addMovieActor(catalog, casting)
 
 def addMovieCompany(catalog, movie):
@@ -174,7 +176,12 @@ def addMovieDirector(catalog,casting):
 
 def addMovieActor(catalog,casting):
     mapa = catalog["actors"]
+    compareMap = catalog["MoviesId"]
     actors = [casting["actor1_name"],casting["actor2_name"],casting["actor3_name"],casting["actor4_name"],casting["actor5_name"]]
+    ide = casting["id"]
+    pair = mp.get(compareMap, ide)
+    director= casting["director_name"]
+    details = me.getValue(pair)
     for actor in actors:
         existActor = mp.contains(mapa, actor)
         if existActor:
@@ -183,7 +190,18 @@ def addMovieActor(catalog,casting):
         else:
             comp = newActor(actor)
             mp.put(mapa,actor, comp)
-        lt.addLast(comp["movies"], casting)
+        lt.addLast(comp["movies"], details)
+        compavg = comp['average_rating']
+        movieavg = details['vote_average']
+        if (compavg == 0.0):
+            comp['average_rating'] = float(movieavg)
+        else:
+            comp['average_rating'] = (compavg + float(movieavg)) / 2
+        lt.addLast(comp["directors"],director)
+        if lt.size(comp["directors"])==1:
+            comp["DirectorMaxCol"]= director
+        else:
+            comp["DirectorMaxCol"]=masrepetido(comp["directors"])
 
 def addMovieGenre(catalog, movie):
     """
@@ -374,3 +392,14 @@ def compareMapActorsDirectors(id,tag):
         return 1
     else:
         return -1
+def masrepetido(lista):
+    iterator= it.newIterator(lista)
+    while it.hasNext(iterator):
+        element = it.next(iterator)
+        x=lista["elements"].count(element)
+        mayor=0
+        elementomayor=""
+        if mayor<x:
+            mayor=x
+            elementomayor=element
+    return elementomayor

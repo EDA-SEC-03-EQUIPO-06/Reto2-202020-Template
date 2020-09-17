@@ -49,15 +49,14 @@ Details = "SmallMoviesDetailsCleaned.csv"
 #  respuesta.  La vista solo interactua con
 #  el controlador.
 # ___________________________________________________
-def printProductionCompanyData(ProductionCompany):
+def printelementData(element):
     """
     Imprime los libros de un autor determinado
     """
-    if ProductionCompany:
-        print('Productora encontrada: ' + ProductionCompany['name'])
-        print('Promedio: ' + str(round(ProductionCompany['average_rating'],2)))
-        print('Total de películas: ' + str(lt.size(ProductionCompany['movies'])))
-        iterator = it.newIterator(ProductionCompany['movies'])
+    if element:
+        print('Promedio: ' + str(round(element['average_rating'],2)))
+        print('Total de películas: ' + str(lt.size(element['movies'])))
+        iterator = it.newIterator(element['movies'])
         while it.hasNext(iterator):
             movie = it.next(iterator)
             print('Título: ' + movie['title'])
@@ -93,14 +92,27 @@ while True:
     elif int(inputs[0]) == 2:
         production_company= input("¿Qué productora de cine desea descubrir?:\n")
         productioncompanyinfo=controller.getMoviesByProductionCompany(cont,production_company)
-        printProductionCompanyData(productioncompanyinfo)
+        if productioncompanyinfo:
+            print('Productora encontrada: ' + productioncompanyinfo['name'])
+            printelementData(productioncompanyinfo)
+        else:
+            print('No se encontró la productora')
+    elif int(inputs[0]) == 3:
+        print ("hola")
+    elif int(inputs[0]) == 4:    
+        actor=input("¿Qué actor de cine desea conocer?:\n")
+        actorinfo=controller.getMoviesByActor(cont,actor)
+        if actorinfo:
+            print('Actor encontrado: '+ actor)
+            printelementData(actorinfo)
+            print("El director con el que " + actor + " más ha colaborado es:"+ actorinfo["DirectorMaxCol"])
+        else:
+            print('No se encontró el actor')
         
     else:
         sys.exit(0)
 """
-    elif int(inputs[0]) == 3:
-
-    elif int(inputs[0]) == 4:
+    
 
     elif int(inputs[0]) == 6:
 
