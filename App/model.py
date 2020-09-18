@@ -58,9 +58,13 @@ def newCatalog():
 
     catalog['Movies'] = lt.newList('SINGLE_LINKED', compareMoviesIds)
     catalog["MoviesId"] = mp.newMap(2000,
-                                    maptype='CHAINING', # No entiendo
-                                    loadfactor=0.4,  # No entiendo
-                                    comparefunction=compareMapMoviesIds) #No entiendo
+                                    maptype='CHAINING', 
+                                    loadfactor=0.4,  
+                                    comparefunction=compareMapMoviesIds) 
+    catalog["CastingId"]= mp.newMap(2000,
+                                    maptype='CHAINING',
+                                    loadfactor=0.4,  
+                                    comparefunction=compareMapMoviesIds) 
     catalog['production_companies'] = mp.newMap(2000,
                                                 maptype='CHAINING',  # Esto no lo entiendo
                                                 loadfactor=0.4,    #Esto no lo entiendo
@@ -106,28 +110,30 @@ def newDirector(name):
     director['movies'] = lt.newList('SINGLE_LINKED', compareElements)
     return director   
 
-def newActor(actor):
+def newActor(actorname):
     actor = {"name": "", "movies": None, "average_rating": 0,"directors":"", "DirectorMaxCol":""}
-    actor["name"] = actor
+    actor["name"] = actorname
     actor["movies"] = lt.newList("SINGLE_LINKED", compareElements)
     actor["directors"]= lt.newList("ARRAY_LIST", compareElements)
     return actor
 
-def newGenre(genre):
+def newGenre(name):
     """
     Esta funcion crea la estructura de libros asociados
     a un año.
     """
-    entry = {'genre': "", "movies": None}
-    entry['genre'] = genre
-    entry["movies"] = lt.newList('SINGLE_LINKED', compareElements)
-    return entry
+    genre = {'name': "", "movies": None}
+    genre['name'] = name
+    genre["movies"] = lt.newList('SINGLE_LINKED', compareElements)
+    return genre
 
-def newCountry(country):
-    entry = {"country": "", "movies": None}
-    entry["country"] = country
-    entry["movies"] = lt.newList("SINGLE_LINKED", compareElements)
-    return entry
+def newCountry(name):
+    country = {"name": "", "movies": None,"years": None,"directors":None}
+    country["name"] = name
+    country["movies"] = lt.newList("SINGLE_LINKED", compareElements)
+    country["years"]=lt.newList("ARRAY_LIST", compareElements)
+    country["directors"]=lt.newList("ARRAY_LIST", compareElements)
+    return country
 
 # Funciones para agregar informacion al catalogo
 def addMovie(catalog, movie):
@@ -135,8 +141,10 @@ def addMovie(catalog, movie):
     mp.put(catalog["MoviesId"], movie["id"], movie)
     addMovieGenre(catalog,movie)
     addMovieCompany(catalog, movie)
+    addMovieCountry(catalog,movie)
     
 def addCasting(catalog, casting):
+    mp.put(catalog["CastingId"],casting["id"],casting)
     addMovieDirector(catalog,casting)
     addMovieActor(catalog, casting)
 
@@ -234,7 +242,22 @@ def addMovieCountry(catalog, movie):
         comp = newCountry(country)
         mp.put(mapa, country, comp)
     lt.addLast(comp["movies"], movie)
+    year= movie["release_date"].split("/")[2]
+    lt.addLast(comp["years"],year)
 
+def addMovieDirectorsbyCountry(catalog, country):
+    compareMap = catalog["CastingId"]
+    mapa=catalog['production_countries']
+    country =mp.get(mapa,country)
+    movies = country["value"]["movies"]
+    iterator= it.newIterator(movies)
+    while it.hasNext(iterator):
+        movie = it.next(iterator)
+        ide = movie["id"]
+        pair = mp.get(compareMap, ide)
+        casting = me.getValue(pair)
+        director= casting["director_name"]
+        lt.addLast(country["value"]["directors"],director)
     
 # ==============================
 # Funciones de consulta
@@ -321,7 +344,7 @@ def compareMoviesIds(id1, id2):
         return -1
 def compareMapMoviesIds(id, entry):
     """
-    Compara dos ids de libros, id es un identificador
+    Compara dos ids de pelícalas, id es un identificador
     y entry una pareja llave-valor
     """
     identry = me.getKey(entry)

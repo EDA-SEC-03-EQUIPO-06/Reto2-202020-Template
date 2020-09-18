@@ -123,12 +123,13 @@ def getMoviesByGenre(catalog, genre):
   """
   Retorna las películas de un género
   """
-  movies = model.getMoviesByGenre(catalog, genre)
-  return movies
+  genreinfo = model.getMoviesByGenre(catalog, genre)
+  return genreinfo
 
 def getMoviesByCountry(catalog, country):
   """
   Retorna las películas de un país
   """
-  movies = model.getMoviesByCountry(catalog, country)
-  return movies
+  model.addMovieDirectorsbyCountry(catalog, country)
+  countryinfo = model.getMoviesByCountry(catalog, country)
+  return countryinfo
