@@ -64,6 +64,7 @@ def printCountryData (country):
     """
     Imprime los datos de un elemento determinado
     """
+    print("Se econtraron "+ str(lt.size(country['movies']))+ "películas producidas en " +country["name"])
     print("Las películas producidas en "+country["name"]+", con su respectivo año de lanzamiento, y director, son: ")
     iterator1 = it.newIterator(country['movies'])
     iterator2 = it.newIterator(country['years'])
@@ -72,9 +73,10 @@ def printCountryData (country):
         movie = it.next(iterator1)
         year=it.next(iterator2)
         director=it.next(iterator3)
-        print('\nPelícula: ' + movie['title'])
+        print('\nPelícula: ' + movie['original_title'])
         print("Año de Estreno: "+ year )
         print("Director: "+director+"\n")
+    print("Se econtraron "+ str(lt.size(country['movies']))+ " películas producidas en " +country["name"]+"\n")
 
 def printMenu():
     print("0- Inicializar Catálogo")
