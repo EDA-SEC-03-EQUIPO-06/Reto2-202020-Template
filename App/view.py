@@ -119,7 +119,7 @@ while True:
         if actorinfo:
             print('Actor encontrado: '+ actorinfo["name"])
             printElementData(actorinfo)
-            print("El director con el que " + actor + " más ha colaborado es:"+ actorinfo["DirectorMaxCol"])
+            print("El director con el que " + actor + " más ha colaborado es: "+ actorinfo["DirectorMaxCol"])
         else:
             print('No se encontró el actor')
     elif int(inputs[0]) == 5:
