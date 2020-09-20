@@ -59,15 +59,23 @@ def loadData(catalog, detailsfile, castingfile):
     dialect.delimiter = ";"
     detailsfile = cf.data_dir + detailsfile
     #input_file = #csv.DictReader(open(detailsfile,encoding="utf-8"), dialect=dialect)
-    input_file = csv.DictReader(open(detailsfile,encoding="utf-8"),dialect= dialect)
+    input_file = csv.DictReader(open(detailsfile,encoding="utf-8-sig"),dialect= dialect)
     castingfile = cf.data_dir + castingfile
     input_file2 = csv.DictReader(open(castingfile,encoding="utf-8"),dialect= dialect)
-
-    for movie in input_file:
+    #i = 0
+    #j = 0
+    for movie,casting in zip(input_file,input_file2):
+      #i += 1
       model.addMovie(catalog,movie)
-    for casting in input_file2:
+      model.addCasting(catalog,casting,movie)
+      #print(i)
+    t1_stop = process_time()
+    #print(t1_stop)
+    """for casting in input_file2:
+      j += 1
       model.addCasting(catalog,casting)
-    t1_stop = process_time() #tiempo final
+      print(j)
+    t1_stop = process_time() #tiempo final"""
     print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
 
 

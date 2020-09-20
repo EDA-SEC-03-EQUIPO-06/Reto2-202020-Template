@@ -26,7 +26,7 @@ from DISClib.ADT import list as lt
 from DISClib.DataStructures import listiterator as it
 from App import controller as controller
 assert config
-
+from DISClib.ADT import map as mp
 """
 La vista se encarga de la interacción con el usuario.
 Presenta el menu de opciones y por cada seleccion
@@ -36,8 +36,8 @@ operación seleccionada.
 
 # ___________________________________________________
 #  Ruta a los archivos
-Casting = "MoviesCastingRaw-small.csv"
-Details = "SmallMoviesDetailsCleaned.csv"
+Casting = "AllMoviesCastingRaw.csv"
+Details = "AllMoviesDetailsCleaned.csv"
 # ___________________________________________________
 
 #Casting = "themoviesdb/MoviesCastingRaw-small.csv"
@@ -103,6 +103,9 @@ while True:
         controller.loadData(cont, Details, Casting)
         print('Películas cargadas: ' + str(controller.moviesSize(cont)))
         print('Directores cargados: ' + str(controller.directorsSize(cont)))    
+        print(mp.size(cont['directors']))
+        print(mp.size(cont['actors']))
+        
     elif int(inputs[0]) == 2:
         production_company= (input("¿Qué productora de cine desea descubrir?:\n")).lower()
         productioncompanyinfo=controller.getMoviesByProductionCompany(cont,production_company)
