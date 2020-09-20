@@ -65,19 +65,19 @@ def printCountryData (country):
     """
     Imprime los datos de un elemento determinado
     """
-    print("Se econtraron "+ str(lt.size(country['movies']))+ "películas producidas en " +country["name"])
-    print("Las películas producidas en "+country["name"]+", con su respectivo año de lanzamiento, y director, son: ")
+    print("Se econtraron "+ str(lt.size(country['movies']))+ " películas producidas en " +country["name"].title())
+    print("Las películas producidas en "+country["name"].title()+", con su respectivo año de lanzamiento, y director, son: ")
     iterator1 = it.newIterator(country['movies'])
     iterator2 = it.newIterator(country['years'])
     iterator3=it.newIterator(country['directors'])
     while it.hasNext(iterator1) and it.hasNext(iterator2) and it.hasNext(iterator3) :
         movie = it.next(iterator1)
         year=it.next(iterator2)
-        director=it.next(iterator3)
+        director=it.next(iterator3).title()
         print('\nPelícula: ' + movie['original_title'])
         print("Año de Estreno: "+ year )
         print("Director: "+director+"\n")
-    print("Se econtraron "+ str(lt.size(country['movies']))+ " películas producidas en " +country["name"]+"\n")
+    print("Se econtraron "+ str(lt.size(country['movies']))+ " películas producidas en " +country["name"].title()+"\n")
 
 def printMenu():
     print("\n0- Inicializar Catálogo")
@@ -116,23 +116,23 @@ while True:
         director_name = input("¿Qué director de cine desea conocer?:\n")
         director_name = director_name.lower()
         director_info = controller.getMoviesByDirector(cont, director_name)
-        print("\nDirector encontrado: "+ director_name.split(" ")[0].capitalize() +" "+ director_name.split(" ")[1].capitalize())
+        print("\nDirector encontrado: "+ director_name.title())
         printElementData(director_info)
     elif int(inputs[0]) == 4:    
         actor=input("¿Qué actor de cine desea conocer?:\n")
         actor = actor.lower()
         actorinfo=controller.getMoviesByActor(cont,actor)
         if actorinfo:
-            print('\nActor encontrado: '+ director_name.split(" ")[0].capitalize() +" "+ director_name.split(" ")[1].capitalize())
+            print('\nActor encontrado: '+ actor.title())
             printElementData(actorinfo)
-            print("El director con el que " + actor + " más ha colaborado es: "+ actorinfo["DirectorMaxCol"])
+            print("El director con el que " + actor.title() + " más ha colaborado es: "+ actorinfo["DirectorMaxCol"])
         else:
             print('No se encontró el actor')
     elif int(inputs[0]) == 5:
         print("hola")
     elif int(inputs[0]) == 6:
         country=input("¿Películas producidas en qué país desea encontrar?:\n")
-        country.lower()
+        country=country.lower()
         countryinfo=controller.getMoviesByCountry(cont,country)
         if countryinfo:
             printCountryData(countryinfo)

@@ -150,7 +150,7 @@ def addCasting(catalog, casting):
 
 def addMovieCompany(catalog, movie):
     mapa = catalog["production_companies"]
-    company = movie["production_companies"]
+    company = movie["production_companies"].lower()
     existcompany = mp.contains(mapa, company)
     if existcompany:
         entry = mp.get(mapa,company)
@@ -200,13 +200,13 @@ def addMovieActor(catalog,casting):
     director= casting["director_name"]
     details = me.getValue(pair)
     for actor in actors:
-        existActor = mp.contains(mapa, actor)
+        existActor = mp.contains(mapa, actor.lower())
         if existActor:
-            entry = mp.get(mapa,actor)
+            entry = mp.get(mapa,actor.lower())
             comp = me.getValue(entry)
         else:
-            comp = newActor(actor)
-            mp.put(mapa,actor, comp)
+            comp = newActor(actor.lower())
+            mp.put(mapa,actor.lower(), comp)
         lt.addLast(comp["movies"], details)
         compavg = comp['average_rating']
         movieavg = details['vote_average']
@@ -242,7 +242,7 @@ def addMovieGenre(catalog, movie):
 
 def addMovieCountry(catalog, movie):
     mapa = catalog["production_countries"]
-    country = movie["production_countries"]
+    country = movie["production_countries"].lower()
     existcountry = mp.contains(mapa, country)
     if existcountry:
         entry = mp.get(mapa,country)
