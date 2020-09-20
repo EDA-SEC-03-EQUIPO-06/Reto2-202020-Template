@@ -60,6 +60,7 @@ def printElementData(element):
         movie = it.next(iterator)
         print('Película: ' + movie['title'])
 
+
 def printCountryData (country):
     """
     Imprime los datos de un elemento determinado
@@ -79,7 +80,7 @@ def printCountryData (country):
     print("Se econtraron "+ str(lt.size(country['movies']))+ " películas producidas en " +country["name"]+"\n")
 
 def printMenu():
-    print("0- Inicializar Catálogo")
+    print("\n0- Inicializar Catálogo")
     print("1- Cargar Archivos")
     print("2- Descubrir productoras de cine")
     print("3- Conocer a un director")
@@ -112,12 +113,17 @@ while True:
         else:
             print('No se encontró la productora')
     elif int(inputs[0]) == 3:
-        print ("hola")
+        director_name = input("¿Qué director de cine desea conocer?:\n")
+        director_name = director_name.lower()
+        director_info = controller.getMoviesByDirector(cont, director_name)
+        print("\nDirector encontrado: "+ director_name.split(" ")[0].capitalize() +" "+ director_name.split(" ")[1].capitalize())
+        printElementData(director_info)
     elif int(inputs[0]) == 4:    
         actor=input("¿Qué actor de cine desea conocer?:\n")
+        actor = actor.lower()
         actorinfo=controller.getMoviesByActor(cont,actor)
         if actorinfo:
-            print('Actor encontrado: '+ actorinfo["name"])
+            print('\nActor encontrado: '+ director_name.split(" ")[0].capitalize() +" "+ director_name.split(" ")[1].capitalize())
             printElementData(actorinfo)
             print("El director con el que " + actor + " más ha colaborado es: "+ actorinfo["DirectorMaxCol"])
         else:
@@ -126,6 +132,7 @@ while True:
         print("hola")
     elif int(inputs[0]) == 6:
         country=input("¿Películas producidas en qué país desea encontrar?:\n")
+        country.lower()
         countryinfo=controller.getMoviesByCountry(cont,country)
         if countryinfo:
             printCountryData(countryinfo)
