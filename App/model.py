@@ -57,27 +57,27 @@ def newCatalog():
                'production_countries': None}
 
     catalog['Movies'] = lt.newList('SINGLE_LINKED', compareMoviesIds)
-    catalog["MoviesId"] = mp.newMap(2000,
-                                    maptype='CHAINING', 
+    catalog["MoviesId"] = mp.newMap(5000,
+                                    maptype='PROBING', 
                                     loadfactor=0.4,  
                                     comparefunction=compareMapMoviesIds) 
-    catalog["CastingId"]= mp.newMap(2000,
-                                    maptype='CHAINING',
+    catalog["CastingId"]= mp.newMap(5000,
+                                    maptype='PROBING',
                                     loadfactor=0.4,  
                                     comparefunction=compareMapMoviesIds) 
     catalog['production_companies'] = mp.newMap(2000,
-                                                maptype='CHAINING',  # Esto no lo entiendo
+                                                maptype='PROBING',  # Esto no lo entiendo
                                                 loadfactor=0.4,    #Esto no lo entiendo
                                                 comparefunction=compareMapCompanies) #Esto lo entiendo mas pero tampoco lo entiendo
-    catalog['directors'] = mp.newMap(2000,
+    catalog['directors'] = mp.newMap(5000,
                                          maptype='CHAINING', #No lo entiendo
                                          loadfactor=0.4, #No entiendo
                                          comparefunction=compareMapDirectorsByName) #No entiendo
-    catalog['actors'] = mp.newMap(2000,
+    catalog['actors'] = mp.newMap(5000,
                                       maptype='CHAINING', #No entiendo
                                       loadfactor=0.4, #No entiendo
                                       comparefunction=compareMapActorsByName) # No entiendo
-    catalog['genres'] = mp.newMap(2000,
+    catalog['genres'] = mp.newMap(5000,
                                  maptype='CHAINING',
                                  loadfactor=0.4,
                                  comparefunction=compareMapByGenre)
@@ -169,7 +169,7 @@ def addMovieCompany(catalog, movie):
 def addMovieDirector(catalog,casting):
     mapa = catalog["directors"]
     compareMap = catalog["MoviesId"]
-    director = casting["director_name"]
+    director = casting["director_name"].lower()
     ide = casting["id"]
     pair = mp.get(compareMap, ide)
     details = me.getValue(pair)
@@ -180,8 +180,17 @@ def addMovieDirector(catalog,casting):
     else:
         comp = newDirector(director)
         mp.put(mapa, director, comp)
-    lt.addLast(comp["movies"], details)
+    lt.addLast(comp["movies"], details, )
+    
+    compavg = comp['average_rating']
+    movieavg = details['vote_average']
+    if (compavg == 0.0):
+        comp['average_rating'] = float(movieavg)
+    else:
+        comp['average_rating'] = (compavg + float(movieavg)) / 2
+        
 
+    
 def addMovieActor(catalog,casting):
     mapa = catalog["actors"]
     compareMap = catalog["MoviesId"]
