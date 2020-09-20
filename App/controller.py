@@ -21,7 +21,8 @@
  """
 
 import config as cf
-from App import model as model
+from App import model
+from time import process_time 
 import csv
 
 
@@ -40,8 +41,6 @@ def initCatalog():
     catalog = model.newCatalog()
     return catalog
 
-
-
 # ___________________________________________________
 #  Funciones para la carga de datos y almacenamiento
 #  de datos en los modelos
@@ -55,6 +54,7 @@ def loadData(catalog, detailsfile, castingfile):
     - Por cada libro se encuentran sus autores y por cada
       autor, se crea una lista con sus libros
     """
+    t1_start = process_time() #tiempo inicial
     dialect = csv.excel()
     dialect.delimiter = ";"
     detailsfile = cf.data_dir + detailsfile
@@ -67,24 +67,64 @@ def loadData(catalog, detailsfile, castingfile):
       model.addMovie(catalog,movie)
     for casting in input_file2:
       model.addCasting(catalog,casting)
-
+    t1_stop = process_time() #tiempo final
+    print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
 
 
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
 
-def movieSize(catalog):
-    size = model.moviesSize(catalog)
-    return size
 
-def moviesByCompany(catalog, company):
-    info = model.getMoviesByCompany(catalog,company)
-    movies = info[0]
-    count = model.listSize(movies)
-    moviesReduced = model.getFifteenElements(movies)
-    prom = info[1]/count
-    return (moviesReduced, count, prom)
+def moviesSize(catalog):
+  """Numero de libros leido
+  """
+  return model.moviesSize(catalog)
+
+
+def directorsSize(catalog):
+  """Numero de autores leido
+  """
+  return model.directorsSize(catalog)
+
+
+def actorsSize(catalog):
+  """Numero de tags leido
+  """
+  return model.actorsSize(catalog)
+
+
+  
+def getMoviesByProductionCompany(catalog,ProductionCompany):
+  """
+  Retorna las películas de un una productora de Cine
+  """
+  productioncompanyinfo = model.getMoviesByProductionCompany(catalog, ProductionCompany)
+  return productioncompanyinfo
+
+
+def getMoviesByDirector(catalog, directorname):
+  """
+    Retorna las películas de un director
+  """
+  directorinfo = model.getMoviesByDirector(catalog, directorname)
+  return directorinfo
+
+
+def getMoviesByActor(catalog, actorname):
+  """
+  Retorna las películas de un actor
+  """
+  actorinfo = model.getMoviesByActor(catalog, actorname)
+  return actorinfo
+
+def getMoviesByCountry(catalog, country):
+  """
+  Retorna las películas de un país
+  """
+  model.addMovieDirectorsbyCountry(catalog, country)
+  countryinfo = model.getMoviesByCountry(catalog, country)
+  return countryinfo
 
 def moviesByGenre(catalog,genre):
   info = model.getMoviesByGenre(catalog, genre)
