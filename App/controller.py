@@ -85,3 +85,11 @@ def moviesByCompany(catalog, company):
     moviesReduced = model.getFifteenElements(movies)
     prom = info[1]/count
     return (moviesReduced, count, prom)
+
+def moviesByGenre(catalog,genre):
+  info = model.getMoviesByGenre(catalog, genre)
+  movies = info[0]
+  count = model.listSize(movies)
+  moviesReduced = model.getFifteenElements(movies)
+  prom = info[1]/count
+  return (moviesReduced,count,prom)

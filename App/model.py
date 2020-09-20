@@ -263,7 +263,19 @@ def getMoviesByCompany(catalog,company):
     return (movieList,averageCount)
         
         
-
+def getMoviesByGenre(catalog,genre):
+    mapa = catalog["genres"]
+    entry = mp.get(mapa,genre)
+    movies = (me.getValue(entry))["movies"]
+    iterator = it.newIterator(movies)
+    movieList = lt.newList("ARRAY_LIST")
+    averageCount = 0
+    while it.hasNext(iterator):
+        movie = it.next(iterator)
+        lt.addLast(movieList,movie["original_title"])
+        averageCount += float(movie["vote_count"])
+    return (movieList,averageCount)
+    
         
 
 

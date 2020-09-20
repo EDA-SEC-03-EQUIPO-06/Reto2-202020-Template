@@ -89,6 +89,12 @@ while True:
         label = input("Etiqueta a buscar: ")
         books = controller.getBooksByTag(cont, label)
         printBooksbyTag(books)
+
+    elif int(inputs[0]) == 6:
+        genre = input("Ingrese el nombre del genero que desea consultar " )
+        info = controller.moviesByGenre(cont,genre)
+        print("El genero " + genre + " tiene un total de "+ str(info[1]) + " peliculas, con un promedio de numero de votos de " + str(round(info[2],2)) + " algunas de las peliculas son estas: \n" + str(info[0]))
+
     else:
         sys.exit(0)
 sys.exit(0)
