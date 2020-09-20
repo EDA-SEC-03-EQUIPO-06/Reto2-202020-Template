@@ -128,9 +128,14 @@ while True:
         else:
             print('No se encontró el actor')
     elif int(inputs[0]) == 5:
-        genre = input("Ingrese el nombre del genero que desea consultar " )
+        genre = input("¿Qué género desea consultar?: \n" ).lower()
         info = controller.moviesByGenre(cont,genre)
-        print("El genero " + genre + " tiene un total de "+ str(info[1]) + " peliculas, con un promedio de numero de votos de " + str(round(info[2],2)) + " algunas de las peliculas son estas: \n" + str(info[0]))
+        print("\nGénero encontrado: " + genre.title())
+        print("El género " + genre.title() + " tiene un total de "+ str(info[1]) + " películas")
+        print("El promedio del número de votos es:  " + str(round(info[2],2))+ "\n")
+        print("Algunas de las películas son: ") 
+        for i in range(0,10):
+            print("Titulo: "+ info[0][i])
     elif int(inputs[0]) == 6:
         country=input("¿Películas producidas en qué país desea encontrar?:\n")
         country=country.lower()

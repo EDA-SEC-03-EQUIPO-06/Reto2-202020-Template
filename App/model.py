@@ -227,6 +227,7 @@ def addMovieGenre(catalog, movie):
     mapa = catalog['genres']
     genres = movie['genres'].split("|")
     for genre in genres:
+        genre = genre.lower()
         existgenre = mp.contains(mapa, genre)
         if existgenre:
             entry = mp.get(mapa, genre)
