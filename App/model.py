@@ -118,10 +118,7 @@ def newActor(actorname):
     return actor
 
 def newGenre(name):
-    """
-    Esta funcion crea la estructura de libros asociados
-    a un año.
-    """
+    
     genre = {'name': "", "movies": None}
     genre['name'] = name
     genre["movies"] = lt.newList('SINGLE_LINKED', compareElements)
@@ -277,6 +274,8 @@ def moviesSize(catalog):
     """
     return lt.size(catalog["Movies"])
 
+def listSize(lst):
+    return lt.size(lst)
 
 def directorsSize(catalog):
     """Numero de directores leido
@@ -318,14 +317,30 @@ def getMoviesByActor(catalog, actorname):
     return None
 
 
-def getMoviesByGenre(catalog, genrename):
-    """
-    Retorna las películas de un género
-    """
-    genre=mp.get(catalog["genres"],genrename)
-    if genre:
-        return me.getValue(genre)
-    return None
+def getFifteenElements(lst):
+    lst = lt.subList(lst,1,listSize(lst)//3)
+    iterator = it.newIterator(lst)
+    movies = []
+    while it.hasNext(iterator):
+        movie = it.next(iterator)
+        movies.append(movie)
+    return movies
+        
+        
+def getMoviesByGenre(catalog,genre):
+    mapa = catalog["genres"]
+    entry = mp.get(mapa,genre)
+    movies = (me.getValue(entry))["movies"]
+    iterator = it.newIterator(movies)
+    movieList = lt.newList("ARRAY_LIST")
+    averageCount = 0
+    while it.hasNext(iterator):
+        movie = it.next(iterator)
+        lt.addLast(movieList,movie["original_title"])
+        averageCount += float(movie["vote_count"])
+    return (movieList,averageCount)
+    
+        
 
 
 def getMoviesByCountry(catalog, countryname):
@@ -435,3 +450,14 @@ def masrepetido(lista):
             mayor=x
             elementomayor=element
     return elementomayor
+
+#===============================
+def newList():
+    a = lt.newList()
+    return a
+
+def addLast(lst, element):
+    lt.addLast(lst, element)
+
+
+

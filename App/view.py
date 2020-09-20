@@ -24,7 +24,7 @@ import sys
 import config
 from DISClib.ADT import list as lt
 from DISClib.DataStructures import listiterator as it
-from App import controller
+from App import controller as controller
 assert config
 
 """
@@ -40,9 +40,8 @@ Casting = "MoviesCastingRaw-small.csv"
 Details = "SmallMoviesDetailsCleaned.csv"
 # ___________________________________________________
 
-
-
-
+#Casting = "themoviesdb/MoviesCastingRaw-small.csv"
+#Details = "themoviesdb/SmallMoviesDetailsCleaned.csv"
 
 # ___________________________________________________
 #  Funciones para imprimir la inforamación de
@@ -105,10 +104,10 @@ while True:
         print('Películas cargadas: ' + str(controller.moviesSize(cont)))
         print('Directores cargados: ' + str(controller.directorsSize(cont)))    
     elif int(inputs[0]) == 2:
-        production_company= input("¿Qué productora de cine desea descubrir?:\n")
+        production_company= (input("¿Qué productora de cine desea descubrir?:\n")).lower()
         productioncompanyinfo=controller.getMoviesByProductionCompany(cont,production_company)
         if productioncompanyinfo:
-            print('Productora encontrada: ' + productioncompanyinfo['name'])
+            print('Productora encontrada: ' + productioncompanyinfo['name'].title())
             printElementData(productioncompanyinfo)
         else:
             print('No se encontró la productora')
@@ -129,7 +128,9 @@ while True:
         else:
             print('No se encontró el actor')
     elif int(inputs[0]) == 5:
-        print("hola")
+        genre = input("Ingrese el nombre del genero que desea consultar " )
+        info = controller.moviesByGenre(cont,genre)
+        print("El genero " + genre + " tiene un total de "+ str(info[1]) + " peliculas, con un promedio de numero de votos de " + str(round(info[2],2)) + " algunas de las peliculas son estas: \n" + str(info[0]))
     elif int(inputs[0]) == 6:
         country=input("¿Películas producidas en qué país desea encontrar?:\n")
         country=country.lower()
@@ -140,11 +141,3 @@ while True:
             print('No se encontró el país')
     else:
         sys.exit(0)
-"""
-    
-
-    
-"""
-    
-sys.exit()
-

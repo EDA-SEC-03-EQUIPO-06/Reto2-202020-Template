@@ -33,7 +33,6 @@ el modelo varias veces o integrar varias de las respuestas
 del modelo en una sola respuesta. Esta responsabilidad
 recae sobre el controlador.
 """
-
 # ___________________________________________________
 #  Inicializacion del catalogo
 # ___________________________________________________
@@ -46,6 +45,7 @@ def initCatalog():
 #  Funciones para la carga de datos y almacenamiento
 #  de datos en los modelos
 # ___________________________________________________
+
 
 def loadData(catalog, detailsfile, castingfile):
     """
@@ -118,14 +118,6 @@ def getMoviesByActor(catalog, actorname):
   actorinfo = model.getMoviesByActor(catalog, actorname)
   return actorinfo
 
-
-def getMoviesByGenre(catalog, genre):
-  """
-  Retorna las películas de un género
-  """
-  genreinfo = model.getMoviesByGenre(catalog, genre)
-  return genreinfo
-
 def getMoviesByCountry(catalog, country):
   """
   Retorna las películas de un país
@@ -133,3 +125,11 @@ def getMoviesByCountry(catalog, country):
   model.addMovieDirectorsbyCountry(catalog, country)
   countryinfo = model.getMoviesByCountry(catalog, country)
   return countryinfo
+
+def moviesByGenre(catalog,genre):
+  info = model.getMoviesByGenre(catalog, genre)
+  movies = info[0]
+  count = model.listSize(movies)
+  moviesReduced = model.getFifteenElements(movies)
+  prom = info[1]/count
+  return (moviesReduced,count,prom)
