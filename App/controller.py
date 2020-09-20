@@ -124,6 +124,7 @@ def getMoviesByActor(catalog, actorname):
   Retorna las películas de un actor
   """
   actorinfo = model.getMoviesByActor(catalog, actorname)
+  actorinfo["DirectorMaxCol"]=model.masrepetido(actorinfo["directors"])
   return actorinfo
 
 def getMoviesByCountry(catalog, country):

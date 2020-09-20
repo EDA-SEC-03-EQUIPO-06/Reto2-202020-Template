@@ -212,10 +212,6 @@ def addMovieActor(catalog,casting,details):
         else:
             comp['average_rating'] = (compavg + float(movieavg)) / 2
         lt.addLast(comp["directors"],director)
-        """if lt.size(comp["directors"])==1:
-            comp["DirectorMaxCol"]= director
-        else:
-            comp["DirectorMaxCol"]=masrepetido(comp["directors"])"""
 
 def addMovieGenre(catalog, movie):
     """
