@@ -58,39 +58,33 @@ def newCatalog():
 
     catalog['Movies'] = lt.newList('ARRAY_LIST', compareMoviesIds)
     catalog["MoviesId"] = mp.newMap(329400,
-                                    maptype='PROBING', 
+                                    maptype='CHAINING', 
                                     loadfactor=0.5,  
                                     comparefunction=compareMapMoviesIds) 
     catalog["CastingId"]= mp.newMap(329400,
-                                    maptype='PROBING',
+                                    maptype='CHAINING',
                                     loadfactor=0.5,  
                                     comparefunction=compareMapMoviesIds) 
     catalog['production_companies'] = mp.newMap(35894,
-                                                maptype='PROBING',  # Esto no lo entiendo
+                                                maptype='CHAINING',  # Esto no lo entiendo
                                                 loadfactor=0.5,    #Esto no lo entiendo
                                                 comparefunction=compareMapCompanies) #Esto lo entiendo mas pero tampoco lo entiendo
     catalog['directors'] = mp.newMap(85908,
-                                         maptype='PROBING', #No lo entiendo
+                                         maptype='CHAINING', #No lo entiendo
                                          loadfactor=0.5, #No entiendo
                                          comparefunction=compareMapDirectorsByName) #No entiendo
     catalog['actors'] = mp.newMap(260806,
-                                      maptype='PROBING', #No entiendo
+                                      maptype='CHAINING', #No entiendo
                                       loadfactor=0.5, #No entiendo
                                       comparefunction=compareMapActorsByName) # No entiendo
     catalog['genres'] = mp.newMap(21,
-                                 maptype='PROBING',
+                                 maptype='CHAINING',
                                  loadfactor=0.5,
                                  comparefunction=compareMapByGenre)
     catalog['production_countries'] = mp.newMap(235,
-                                                maptype='PROBING',
+                                                maptype='CHAINING',
                                                 loadfactor=0.5,
                                                 comparefunction=compareMapCountries)
-    """                                           
-    catalog['actor_director'] = mp.newMap(2000,
-                                          maptype='CHAINING',
-                                          loadfactor=0.7,
-                                          comparefunction=compareActorByDirector)
-    """
     return catalog
 
 def newCompany(name):
@@ -156,12 +150,7 @@ def addMovieCompany(catalog, movie):
         comp = newCompany(company)
         mp.put(mapa, company, comp)
     lt.addLast(comp["movies"], movie)
-    compavg = comp['average_rating']
-    movieavg = movie['vote_average']
-    if (compavg == 0.0):
-        comp['average_rating'] = float(movieavg)
-    else:
-        comp['average_rating'] = (compavg + float(movieavg)) / 2
+    agregar_promedio(comp,movie['vote_average'])
 
 def addMovieDirector(catalog,casting,details):
     mapa = catalog["directors"]
@@ -178,15 +167,8 @@ def addMovieDirector(catalog,casting,details):
         comp = newDirector(director)
         mp.put(mapa, director, comp)
     lt.addLast(comp["movies"], details)
-    
-    compavg = comp['average_rating']
     movieavg = details['vote_average']
-    if (compavg == 0.0):
-        comp['average_rating'] = float(movieavg)
-    else:
-        comp['average_rating'] = (compavg + float(movieavg)) / 2
-        
-
+    agregar_promedio(comp,movieavg)
     
 def addMovieActor(catalog,casting,details):
     mapa = catalog["actors"]
@@ -205,12 +187,8 @@ def addMovieActor(catalog,casting,details):
             comp = newActor(actor.lower())
             mp.put(mapa,actor.lower(), comp)
         lt.addLast(comp["movies"], details)
-        compavg = comp['average_rating']
         movieavg = details['vote_average']
-        if (compavg == 0.0):
-            comp['average_rating'] = float(movieavg)
-        else:
-            comp['average_rating'] = (compavg + float(movieavg)) / 2
+        agregar_promedio(comp,movieavg)
         lt.addLast(comp["directors"],director)
 
 def addMovieGenre(catalog, movie):
@@ -439,17 +417,19 @@ def compareMapActorsDirectors(id,tag):
         return 1
     else:
         return -1
+
+def agregar_promedio(comp,movieavg):
+    compavg = comp['average_rating']
+    comp['average_rating'] = (compavg*(lt.size(comp["movies"])-1) + float(movieavg)) / (lt.size(comp["movies"])) 
+    
 def masrepetido(lista):
-    iterator= it.newIterator(lista)
-    while it.hasNext(iterator):
-        element = it.next(iterator)
-        x=lista["elements"].count(element)
-        mayor=0
-        elementomayor=""
-        if mayor<x:
-            mayor=x
-            elementomayor=element
-    return elementomayor
+    mas_repetido=""
+    mayor=0
+    for cada_elemento in lista:
+        if mayor< lista.count(cada_elemento):
+            mayor = lista.count(cada_elemento)
+            mas_repetido = cada_elemento
+    return mas_repetido
 
 #===============================
 def newList():

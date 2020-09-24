@@ -110,7 +110,7 @@ while True:
         production_company= (input("¿Qué productora de cine desea descubrir?:\n")).lower()
         productioncompanyinfo=controller.getMoviesByProductionCompany(cont,production_company)
         if productioncompanyinfo:
-            print('Productora encontrada: ' + productioncompanyinfo['name'].title())
+            print('\nProductora encontrada: ' + productioncompanyinfo['name'].title())
             printElementData(productioncompanyinfo)
         else:
             print('No se encontró la productora')
@@ -127,7 +127,10 @@ while True:
         if actorinfo:
             print('\nActor encontrado: '+ actor.title())
             printElementData(actorinfo)
-            print("El director con el que " + actor.title() + " más ha colaborado es: "+ actorinfo["DirectorMaxCol"])
+            if actorinfo["DirectorMaxCol"]!=None:
+                print("El director con el que " + actor.title() + " más ha colaborado es: "+ actorinfo["DirectorMaxCol"])
+            else:
+                print("El actor " + actor.title() +" ha colaborado con varios directores en mismas cantidades, como: "+actorinfo["directors"][0])
         else:
             print('No se encontró el actor')
     elif int(inputs[0]) == 5:
